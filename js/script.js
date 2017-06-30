@@ -1,10 +1,17 @@
+class Storage {
+    saveTask(counter, text) {
+        localStorage.setItem(counter, text);
+    }
+}
+
 class Item {
-    constructor(text, counter) {
+    constructor(counter, text) {
         this.wrapper = document.createElement('li');
         this.wrapper.className = 'item';
         this.wrapper.innerHTML = text;
         this.wrapper.dataset.number = counter;
         document.querySelector('.tasks').appendChild(this.wrapper);
+        app.storage.saveTask(counter, text);
     }
 }
 
@@ -12,6 +19,7 @@ class App {
     constructor() {
         this.newItem();
         console.log('new app!');
+        this.storage = new Storage();
     }
 
     newItem() {
@@ -19,12 +27,13 @@ class App {
 
         document.querySelector('.button').onclick = function() {
             let text = document.querySelector('.input');
-            new Item(text.value, counter);
+            new Item(counter, text.value);
+
             text.value = '';
             counter++;
         }
     }
 }
 
-new App();
+let app = new App();
 
