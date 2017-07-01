@@ -1,6 +1,29 @@
 class Storage {
+    constructor() {
+        this.getTasks();
+    }
+
     saveTask(counter, text) {
-        localStorage.setItem(counter, text);
+        let task = JSON.stringify({
+            data: {
+                text: text
+            }
+        });
+        localStorage.setItem(counter,task);
+    }
+
+    getTasks() {
+        for(let number in localStorage) {
+            let data = JSON.parse(localStorage[number])['data'];
+            this.wrapper = document.createElement('li');
+            this.wrapper.innerHTML = data['text'];
+            this.wrapper.dataset.number = number;
+            document.querySelector('.tasks').appendChild(this.wrapper);
+        }
+    }
+
+    static lengthStorage() {
+        return localStorage.length + 1;
     }
 }
 
@@ -17,20 +40,16 @@ class Item {
 
 class App {
     constructor() {
+        this.storage = new Storage();
         this.newItem();
         console.log('new app!');
-        this.storage = new Storage();
     }
 
     newItem() {
-        let counter = 0;
-
         document.querySelector('.button').onclick = function() {
             let text = document.querySelector('.input');
-            new Item(counter, text.value);
-
+            new Item(Storage.lengthStorage(), text.value);
             text.value = '';
-            counter++;
         }
     }
 }
